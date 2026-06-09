@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StartiqStudios — Bot Hosting</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            discord: { 50: '#eef2ff', 100: '#dbe4ff', 200: '#bac8ff', 300: '#91a7ff', 400: '#7289da', 500: '#5b6eae', 600: '#475283', 700: '#363a5a', 800: '#2b2f45', 900: '#1e2030', 950: '#12131f' },
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen bg-discord-950 text-slate-100 font-sans">
+
+  <!-- ============ AUTH SCREEN ============ -->
+  <div id="authScreen" class="flex min-h-screen items-center justify-center px-4 py-10">
+    <div class="w-full max-w-md">
+      <!-- Brand -->
+      <div class="mb-8 text-center">
+        <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/25">
+          <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/><line x1="12" y1="22" x2="12" y2="15.5"/><polyline points="22 8.5 12 15.5 2 8.5"/></svg>
+        </div>
+        <h1 class="text-2xl font-bold tracking-tight text-white">StartiqStudios</h1>
+        <p class="mt-1 text-sm text-slate-400" data-i18n="auth.tagline">Power your Discord bots with ease.</p>
+      </div>
+
+      <!-- Auth Card -->
+      <div class="rounded-2xl border border-white/5 bg-discord-900/60 p-6 backdrop-blur-sm shadow-2xl shadow-black/30">
+        <h2 id="authTitle" class="text-lg font-bold text-white">Welcome back</h2>
+        <p id="authSubtitle" class="mt-1 text-sm text-slate-400">Sign in to manage your bots.</p>
+
+        <!-- Error -->
+        <div id="authError" class="mt-4 hidden rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-xs font-medium text-red-400"></div>
+
+        <form id="authForm" class="mt-5 space-y-4" autocomplete="on">
+          <!-- Name (signup only) -->
+          <div id="authNameGroup" class="hidden">
+            <label for="authName" class="mb-1.5 block text-xs font-medium text-slate-400">Full Name</label>
+            <input id="authName" type="text" autocomplete="name" class="input-field" placeholder="John Doe">
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label for="authEmail" class="mb-1.5 block text-xs font-medium text-slate-400">Email</label>
+            <input id="authEmail" type="email" autocomplete="email" required class="input-field" placeholder="you@example.com">
+          </div>
+
+          <!-- Password -->
+          <div>
+            <label for="authPassword" class="mb-1.5 block text-xs font-medium text-slate-400">Password</label>
+            <input id="authPassword" type="password" autocomplete="current-password" required class="input-field" placeholder="••••••••">
+          </div>
+
+          <!-- Confirm (signup only) -->
+          <div id="authConfirmGroup" class="hidden">
+            <label for="authConfirm" class="mb-1.5 block text-xs font-medium text-slate-400">Confirm Password</label>
+            <input id="authConfirm" type="password" autocomplete="new-password" class="input-field" placeholder="••••••••">
+          </div>
+
+          <!-- Remember me -->
+          <div class="flex items-center gap-2">
+            <input id="authRemember" type="checkbox" checked class="h-4 w-4 rounded border-white/10 bg-discord-800 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-0">
+            <label for="authRemember" class="text-xs text-slate-400">Remember me</label>
+          </div>
+
+          <!-- Submit -->
+          <button id="authSubmit" type="button" class="btn-primary flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            <span>Sign In</span>
+          </button>
+        </form>
+
+        <!-- Toggle -->
+        <p id="authToggleText" class="mt-4 text-center text-xs text-slate-500">
+          Don't have an account? <button type="button" id="authToggleLink" class="font-semibold text-indigo-400 hover:text-indigo-300 transition">Sign up</button>
+        </p>
+      </div>
+
+      <p class="mt-6 text-center text-[11px] text-slate-600">&copy; 2025 StartiqStudios. All rights reserved.</p>
+    </div>
+  </div>
+
+  <!-- ============ MAIN APP (hidden until logged in) ============ -->
+  <div id="appContent" class="hidden">
+    <div id="app" class="mx-auto flex min-h-screen max-w-4xl flex-col px-4 py-6">
+
+      <!-- Header -->
+      <header class="mb-6">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 shadow-md shadow-indigo-500/20">
+              <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/><line x1="12" y1="22" x2="12" y2="15.5"/><polyline points="22 8.5 12 15.5 2 8.5"/></svg>
+            </div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-400">StartiqStudios</p>
+              <h1 class="text-xl font-bold text-white">Bot Dashboard</h1>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2">
+              <span id="statusDot" class="h-2.5 w-2.5 rounded-full bg-slate-500 transition-colors duration-300"></span>
+              <span id="statusLabel" class="text-xs font-medium text-slate-400">Offline</span>
+            </div>
+            <!-- User Menu -->
+            <div class="relative" id="userMenuWrap">
+              <button id="btnUserMenu" type="button" class="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-500/20 text-sm font-bold text-indigo-300 transition hover:bg-indigo-500/30" aria-label="User menu">
+                <span id="userAvatar">?</span>
+              </button>
+              <div id="userDropdown" class="absolute right-0 top-full z-50 mt-2 hidden w-56 rounded-xl border border-white/5 bg-discord-900 p-1.5 shadow-2xl shadow-black/40">
+                <div class="px-3 py-2">
+                  <p id="dropdownName" class="text-sm font-semibold text-white"></p>
+                  <p id="dropdownEmail" class="text-xs text-slate-500"></p>
+                </div>
+                <div class="my-1 h-px bg-white/5"></div>
+                <button id="btnLogout" type="button" class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-400 transition hover:bg-red-500/10 hover:text-red-400">
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                  <span>Log out</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="mt-2 text-sm text-slate-400">Manage and monitor your Discord bots from one dashboard.</p>
+      </header>
+
+      <!-- Nav Tabs -->
+      <nav class="mb-6 flex gap-1 rounded-xl bg-discord-900 p-1" role="tablist" aria-label="Navigation">
+        <button role="tab" aria-selected="true" data-tab="dashboard" class="nav-tab active flex-1 rounded-lg px-4 py-2.5 text-sm font-medium transition-all">Dashboard</button>
+        <button role="tab" aria-selected="false" data-tab="console" class="nav-tab flex-1 rounded-lg px-4 py-2.5 text-sm font-medium transition-all">Console</button>
+        <button role="tab" aria-selected="false" data-tab="settings" class="nav-tab flex-1 rounded-lg px-4 py-2.5 text-sm font-medium transition-all">Settings</button>
+      </nav>
+
+      <!-- Tab: Dashboard -->
+      <section id="tab-dashboard" role="tabpanel" class="tab-panel space-y-6">
+        <!-- Controls -->
+        <div class="flex flex-wrap gap-3">
+          <button id="btnStart" type="button" class="btn-primary flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>Start Bot</span>
+          </button>
+          <button id="btnStop" type="button" class="btn-danger flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all" disabled>
+            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+            <span>Stop Bot</span>
+          </button>
+          <button id="btnRestart" type="button" class="btn-secondary flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all" disabled>
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+            <span>Restart Bot</span>
+          </button>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <div class="stat-card">
+            <div class="flex items-center gap-2 text-slate-400">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <span class="text-xs font-medium">Servers</span>
+            </div>
+            <p id="stat-servers" class="mt-2 text-2xl font-bold text-white">0</p>
+          </div>
+          <div class="stat-card">
+            <div class="flex items-center gap-2 text-slate-400">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+              <span class="text-xs font-medium">Users</span>
+            </div>
+            <p id="stat-users" class="mt-2 text-2xl font-bold text-white">0</p>
+          </div>
+          <div class="stat-card">
+            <div class="flex items-center gap-2 text-slate-400">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span class="text-xs font-medium">Uptime</span>
+            </div>
+            <p id="stat-uptime" class="mt-2 text-2xl font-bold text-white">0s</p>
+          </div>
+          <div class="stat-card">
+            <div class="flex items-center gap-2 text-slate-400">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <span class="text-xs font-medium">Messages</span>
+            </div>
+            <p id="stat-messages" class="mt-2 text-2xl font-bold text-white">0</p>
+          </div>
+          <div class="stat-card">
+            <div class="flex items-center gap-2 text-slate-400">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              <span class="text-xs font-medium">Latency</span>
+            </div>
+            <p id="stat-latency" class="mt-2 text-2xl font-bold text-white">—<span class="text-sm font-normal text-slate-400"> ms</span></p>
+          </div>
+          <div class="stat-card">
+            <div class="flex items-center gap-2 text-slate-400">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>
+              <span class="text-xs font-medium">Commands</span>
+            </div>
+            <p id="stat-commands" class="mt-2 text-2xl font-bold text-white">0</p>
+          </div>
+        </div>
+
+        <!-- Activity Graph -->
+        <div class="rounded-2xl border border-white/5 bg-discord-900/50 p-5">
+          <h2 class="mb-4 text-sm font-semibold text-slate-300">Activity (last 60s)</h2>
+          <div id="activityGraph" class="flex items-end gap-px h-24"></div>
+        </div>
+      </section>
+
+      <!-- Tab: Console -->
+      <section id="tab-console" role="tabpanel" class="tab-panel hidden space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-semibold text-slate-300">Live Console</h2>
+          <button id="btnClearConsole" type="button" class="rounded-lg bg-discord-800 px-3 py-1.5 text-xs font-medium text-slate-400 transition hover:text-white">Clear</button>
+        </div>
+        <div id="consoleLog" class="console-log h-80 overflow-y-auto rounded-2xl border border-white/5 bg-discord-950 p-4 font-mono text-xs leading-relaxed">
+          <p class="text-slate-500 italic">No logs yet. Start your bot to see activity.</p>
+        </div>
+        <div class="flex gap-2">
+          <input id="consoleInput" type="text" class="flex-1 rounded-xl border border-white/10 bg-discord-900 px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" placeholder="Type a command…">
+          <button id="btnSendCommand" type="button" class="rounded-xl bg-indigo-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-400">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- Tab: Settings -->
+      <section id="tab-settings" role="tabpanel" class="tab-panel hidden space-y-6">
+        <h2 class="text-sm font-semibold text-slate-300">Bot Configuration</h2>
+
+        <form id="settingsForm" class="space-y-5">
+          <div>
+            <label for="inputToken" class="mb-1.5 block text-xs font-medium text-slate-400">Bot Token</label>
+            <div class="relative">
+              <input id="inputToken" type="password" class="w-full rounded-xl border border-white/10 bg-discord-900 px-4 py-3 pr-10 text-sm text-white placeholder-slate-500 outline-none transition focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" placeholder="Enter your Discord bot token">
+              <button type="button" id="btnToggleToken" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300" aria-label="Toggle token visibility">
+                <svg class="h-4 w-4" id="eyeIcon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label for="inputPrefix" class="mb-1.5 block text-xs font-medium text-slate-400">Command Prefix</label>
+            <input id="inputPrefix" type="text" maxlength="5" class="w-full rounded-xl border border-white/10 bg-discord-900 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" placeholder="e.g. !">
+          </div>
+
+          <div>
+            <label for="inputStatus" class="mb-1.5 block text-xs font-medium text-slate-400">Status Message</label>
+            <input id="inputStatus" type="text" class="w-full rounded-xl border border-white/10 bg-discord-900 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" placeholder="e.g. Watching over the server">
+          </div>
+
+          <div>
+            <label for="inputStatusType" class="mb-1.5 block text-xs font-medium text-slate-400">Status Type</label>
+            <select id="inputStatusType" class="w-full appearance-none rounded-xl border border-white/10 bg-discord-900 px-4 py-3 text-sm text-white outline-none transition focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+              <option value="playing">Playing</option>
+              <option value="watching">Watching</option>
+              <option value="listening">Listening</option>
+              <option value="competing">Competing</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn-primary w-full rounded-xl px-5 py-3 text-sm font-semibold transition-all">Save Configuration</button>
+        </form>
+
+        <!-- Danger Zone -->
+        <div class="rounded-2xl border border-red-500/20 bg-red-500/5 p-5">
+          <h3 class="text-sm font-semibold text-red-400">Danger Zone</h3>
+          <p class="mt-1 text-xs text-slate-400">This will reset all settings, logs, and stats.</p>
+          <button id="btnReset" type="button" class="mt-3 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-2 text-xs font-semibold text-red-400 transition hover:bg-red-500/20">Reset All Data</button>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2"></div>
+
+  <!-- Scripts: loaded in dependency order -->
+  <script src="ui/toast-view.js"></script>
+  <script src="state.js"></script>
+  <script src="storage.js"></script>
+  <script src="simulator.js"></script>
+  <script src="ui/dashboard-view.js"></script>
+  <script src="ui/console-view.js"></script>
+  <script src="ui/settings-view.js"></script>
+  <script src="ui/auth-view.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+:root {
+  color-scheme: dark;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(180deg, #12131f 0%, #1e2030 100%);
+  min-height: 100vh;
+}
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, #7289da, #5b6eae);
+  color: white;
+  box-shadow: 0 2px 8px rgba(114, 137, 218, 0.3);
+}
+.btn-primary:hover:not(:disabled) {
+  box-shadow: 0 4px 16px rgba(114, 137, 218, 0.4);
+  transform: translateY(-1px);
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #ed4245, #c0392b);
+  color: white;
+  box-shadow: 0 2px 8px rgba(237, 66, 69, 0.3);
+}
+.btn-danger:hover:not(:disabled) {
+  box-shadow: 0 4px 16px rgba(237, 66, 69, 0.4);
+  transform: translateY(-1px);
+}
+.btn-danger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+}
+.btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+.btn-secondary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Nav Tabs */
+.nav-tab {
+  color: #64748b;
+  background: transparent;
+}
+.nav-tab:hover {
+  color: #94a3b8;
+}
+.nav-tab.active {
+  background: rgba(114, 137, 218, 0.15);
+  color: #7289da;
+  box-shadow: 0 1px 4px rgba(114, 137, 218, 0.1);
+}
+
+/* Stat Cards */
+.stat-card {
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(43, 47, 69, 0.4);
+  padding: 1rem 1.25rem;
+  transition: all 0.2s ease;
+}
+.stat-card:hover {
+  border-color: rgba(114, 137, 218, 0.2);
+  background: rgba(43, 47, 69, 0.6);
+}
+
+/* Console */
+.console-log {
+  scrollbar-width: thin;
+  scrollbar-color: #363a5a transparent;
+}
+.console-log::-webkit-scrollbar { width: 6px; }
+.console-log::-webkit-scrollbar-track { background: transparent; }
+.console-log::-webkit-scrollbar-thumb { background: #363a5a; border-radius: 3px; }
+
+.log-entry {
+  animation: logSlideIn 0.2s ease-out;
+}
+@keyframes logSlideIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Status Dot */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+  50% { box-shadow: 0 0 8px 4px currentColor; opacity: 0.8; }
+}
+.status-online { background: #57f287; color: rgba(87, 242, 135, 0.4); animation: pulse-glow 2s ease-in-out infinite; }
+.status-offline { background: #747f8d; }
+.status-starting { background: #fee75c; color: rgba(254, 231, 92, 0.4); animation: pulse-glow 1s ease-in-out infinite; }
+.status-stopping { background: #ed4245; color: rgba(237, 66, 69, 0.4); animation: pulse-glow 1s ease-in-out infinite; }
+
+/* Activity Graph */
+.graph-bar {
+  flex: 1;
+  background: linear-gradient(to top, rgba(114, 137, 218, 0.3), rgba(114, 137, 218, 0.7));
+  border-radius: 2px 2px 0 0;
+  min-height: 2px;
+  transition: height 0.3s ease;
+}
+
+/* Toast */
+.toast {
+  animation: toastIn 0.3s ease-out;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  min-width: 200px;
+}
+.toast-success { background: rgba(87, 242, 135, 0.15); border: 1px solid rgba(87, 242, 135, 0.3); color: #57f287; }
+.toast-error { background: rgba(237, 66, 69, 0.15); border: 1px solid rgba(237, 66, 69, 0.3); color: #ed4245; }
+.toast-info { background: rgba(114, 137, 218, 0.15); border: 1px solid rgba(114, 137, 218, 0.3); color: #7289da; }
+@keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes toastOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(20px); } }
+
+/* Tab transitions */
+.tab-panel { animation: fadeIn 0.2s ease-out; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Auth Input Fields */
+.input-field {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #2b2f45;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: white;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+.input-field::placeholder { color: #64748b; }
+.input-field:focus {
+  border-color: #7289da;
+  box-shadow: 0 0 0 2px rgba(114, 137, 218, 0.15);
+}
+
+/* Auth screen background */
+#authScreen {
+  background: radial-gradient(ellipse at top, rgba(114, 137, 218, 0.08) 0%, transparent 60%),
+              linear-gradient(180deg, #12131f 0%, #1e2030 100%);
+}

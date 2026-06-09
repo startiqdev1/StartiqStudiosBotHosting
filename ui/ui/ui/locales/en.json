@@ -1,0 +1,80 @@
+{
+  "app": {
+    "eyebrow": "StartiqStudios",
+    "title": "Bot Dashboard",
+    "subtitle": "Manage and monitor your Discord bots from one dashboard."
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "console": "Console",
+    "settings": "Settings"
+  },
+  "status": {
+    "online": "Online",
+    "offline": "Offline",
+    "starting": "Starting…",
+    "stopping": "Stopping…"
+  },
+  "dashboard": {
+    "servers": "Servers",
+    "users": "Users",
+    "uptime": "Uptime",
+    "messages": "Messages",
+    "latency": "Latency",
+    "commands": "Commands"
+  },
+  "controls": {
+    "start": "Start Bot",
+    "stop": "Stop Bot",
+    "restart": "Restart Bot"
+  },
+  "console": {
+    "title": "Live Console",
+    "clear": "Clear",
+    "empty": "No logs yet. Start your bot to see activity.",
+    "placeholder": "Type a command…"
+  },
+  "settings": {
+    "title": "Bot Configuration",
+    "tokenLabel": "Bot Token",
+    "tokenPlaceholder": "Enter your Discord bot token",
+    "prefixLabel": "Command Prefix",
+    "prefixPlaceholder": "e.g. !",
+    "statusLabel": "Status Message",
+    "statusPlaceholder": "e.g. Watching over the server",
+    "statusTypeLabel": "Status Type",
+    "statusPlaying": "Playing",
+    "statusWatching": "Watching",
+    "statusListening": "Listening",
+    "statusCompeting": "Competing",
+    "save": "Save Configuration",
+    "saved": "Configuration saved!",
+    "dangerZone": "Danger Zone",
+    "resetAll": "Reset All Data",
+    "resetConfirm": "This will clear all saved settings and logs. Continue?"
+  },
+  "auth": {
+    "tagline": "Power your Discord bots with ease.",
+    "welcomeBack": "Welcome back",
+    "createAccount": "Create an account",
+    "loginSubtitle": "Sign in to manage your bots.",
+    "signupSubtitle": "Join StartiqStudios to host your bots.",
+    "loginBtn": "Sign In",
+    "signupBtn": "Create Account",
+    "logout": "Log out",
+    "loggedOut": "You have been logged out.",
+    "welcomeNew": "Welcome to StartiqStudios, {name}!",
+    "welcomeBackMsg": "Welcome back, {name}!"
+  },
+  "messages": {
+    "botStarting": "Initializing bot connection…",
+    "botOnline": "Bot is now online and ready!",
+    "botStopping": "Shutting down gracefully…",
+    "botOffline": "Bot has been stopped.",
+    "ready": "Logged in as {username}",
+    "joinedServer": "Joined server: {server}",
+    "messageReceived": "Message received in #{channel}",
+    "commandExecuted": "Command executed: {command}",
+    "error": "Error: {message}"
+  }
+}
